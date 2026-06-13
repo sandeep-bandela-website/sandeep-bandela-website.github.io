@@ -161,25 +161,7 @@
       gap: 0.5rem;
     }
     .photo-placeholder svg { opacity: 0.4; }
-    .photo-instructions {
-      margin-top: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 260px;
-      text-align: center;
-    }
-    .photo-instructions code {
-      color: var(--accent2);
-      background: var(--bg);
-      padding: 0.1rem 0.3rem;
-      border-radius: 3px;
-    }
+
     #photo-input { display: none; }
     .rhcsa-badge {
       position: absolute; top: -10px; right: -10px;
@@ -444,15 +426,12 @@
         </svg>
         <span style="font-size:0.72rem; padding: 0 1rem;">Upload <code style="color:var(--accent2)">photo.jpg</code><br>to your GitHub repo</span>
       </div>
-     # <!-- To show your photo: upload a file named photo.jpg to your GitHub repo root -->
+      <!-- To show your photo: upload a file named photo.jpg to your GitHub repo root -->
       <img id="profileImg" src="photo.jpg" alt="Sandeep Bandela"
            onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';"
            onload="this.style.display='block'; document.getElementById('photoPlaceholder').style.display='none';" />
     </div>
-    <div class="photo-instructions">
-      📸 To add your photo:<br>
-      upload as <code>photo.jpg</code><br>to your GitHub repo root
-    </div>
+
     <div class="rhcsa-badge">RHCSA<br>Certified</div>
   </div>
 </section>
