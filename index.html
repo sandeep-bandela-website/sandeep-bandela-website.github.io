@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandeep Bandela – Infrastructure Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #0B0F1A;
+      --surface:  #141929;
+      --border:   #1E2740;
+      --accent:   #3B82F6;
+      --accent2:  #60A5FA;
+      --green:    #10B981;
+      --muted:    #6B7FA3;
+      --text:     #E2E8F0;
+      --subtext:  #94A3B8;
+      --white:    #FFFFFF;
+      --font-main: 'Space Grotesk', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(11,15,26,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      color: var(--subtext); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent2); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 7rem 2rem 4rem;
+      max-width: 1200px; margin: 0 auto;
+      gap: 3rem;
+    }
+    .hero-text { flex: 1; }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-name {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .hero-title {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 400;
+      color: var(--accent2);
+      margin-bottom: 1.5rem;
+    }
+    .hero-summary {
+      font-size: 0.95rem;
+      color: var(--subtext);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem; }
+    .badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.3rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent2);
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.7rem 1.6rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--subtext);
+      padding: 0.7rem 1.6rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* ── PHOTO ── */
+    .hero-photo {
+      flex-shrink: 0;
+      position: relative;
+    }
+    .photo-wrapper {
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .photo-wrapper img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+      gap: 0.5rem;
+    }
+    .photo-placeholder svg { opacity: 0.4; }
+    .photo-upload-label {
+      position: absolute; bottom: 8px; right: 8px;
+      background: var(--accent);
+      border-radius: 50%; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .photo-upload-label:hover { background: var(--accent2); }
+    .photo-upload-label svg { pointer-events: none; }
+    #photo-input { display: none; }
+    .rhcsa-badge {
+      position: absolute; top: -10px; right: -10px;
+      background: #CC0000;
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2.5rem;
+    }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 0 2rem;
+    }
+
+    /* ── EXPERIENCE ── */
+    .timeline { display: flex; flex-direction: column; gap: 2rem; }
+    .job-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.8rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .job-card:hover { border-color: var(--accent); }
+    .job-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .job-title { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .job-period {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .job-company { color: var(--accent2); font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .job-location { color: var(--muted); font-size: 0.8rem; font-family: var(--font-mono); margin-bottom: 1rem; }
+    .job-desc { color: var(--subtext); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.6; }
+    .job-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .job-bullets li {
+      font-size: 0.85rem; color: var(--subtext); padding-left: 1.2rem; position: relative;
+    }
+    .job-bullets li::before {
+      content: '▸'; position: absolute; left: 0; color: var(--accent);
+    }
+    .current-dot {
+      position: absolute; top: 1.8rem; left: -8px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--green); border: 2px solid var(--bg);
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .skill-group-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .skill-tag {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .skill-tag:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* ── CERTIFICATIONS ── */
+    .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex; gap: 1rem;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .cert-card:hover { border-color: var(--accent); }
+    .cert-icon {
+      width: 44px; height: 44px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.2rem;
+    }
+    .cert-icon.red-hat { background: rgba(204,0,0,0.15); }
+    .cert-icon.linux { background: rgba(59,130,246,0.15); }
+    .cert-icon.other { background: rgba(16,185,129,0.15); }
+    .cert-name { font-weight: 600; font-size: 0.95rem; color: var(--white); margin-bottom: 0.3rem; }
+    .cert-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); line-height: 1.6; }
+    .cert-link { color: var(--accent2); text-decoration: none; font-size: 0.75rem; display: inline-block; margin-top: 0.4rem; }
+    .cert-link:hover { text-decoration: underline; }
+
+    /* ── EDUCATION ── */
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.8rem;
+      display: flex; gap: 1.5rem; align-items: center;
+      flex-wrap: wrap;
+    }
+    .edu-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(59,130,246,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+    }
+    .edu-degree { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .edu-uni { color: var(--accent2); font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .edu-year { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+
+    /* ── ACHIEVEMENTS ── */
+    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+    .achievement-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+    }
+    .achievement-card p { font-size: 0.88rem; color: var(--subtext); }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+    .contact-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .contact-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .contact-icon {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: rgba(59,130,246,0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-label { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+    .contact-value { font-size: 0.88rem; color: var(--text); font-weight: 500; word-break: break-all; }
+
+    /* ── LANGUAGES ── */
+    .lang-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .lang-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1.4rem;
+      text-align: center;
+    }
+    .lang-name { font-weight: 600; color: var(--white); font-size: 0.95rem; }
+    .lang-level { font-size: 0.75rem; color: var(--muted); font-family: var(--font-mono); margin-top: 0.2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      #hero { flex-direction: column-reverse; align-items: center; text-align: center; }
+      .hero-cta { justify-content: center; }
+      .hero-badges { justify-content: center; }
+      nav { padding: 0.8rem 1rem; }
+      .nav-links { gap: 1rem; }
+      .job-header { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">sandeep.dev</span>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">// Infrastructure Engineer</p>
+    <h1 class="hero-name">Sandeep<br>Bandela</h1>
+    <p class="hero-title">RHCSA · Ansible (AWX) · Kubernetes · VMware · Docker</p>
+    <p class="hero-summary">
+      Dynamic and results-driven IT professional with 7+ years of experience specializing in Linux system administration, VMware environments, and enterprise infrastructure. Currently delivering resilient, high-availability solutions across global environments at Epiq.
+    </p>
+    <div class="hero-badges">
+      <span class="badge">RHEL / CentOS / Ubuntu</span>
+      <span class="badge">Kubernetes (RKE2 · MicroK8s)</span>
+      <span class="badge">Docker · Ansible · AWX</span>
+      <span class="badge">VMware · oVirt</span>
+      <span class="badge">DNS · DHCP · NFS · Samba</span>
+      <span class="badge">LVM · Bash Scripting</span>
+    </div>
+    <div class="hero-cta">
+      <a href="mailto:sandeepreddy40343@gmail.com" class="btn-primary">Get In Touch</a>
+      <a href="https://www.linkedin.com/in/sandeep-reddy-bandela" target="_blank" class="btn-secondary">LinkedIn Profile</a>
+    </div>
+  </div>
+
+  <div class="hero-photo">
+    <div class="photo-wrapper" id="photoWrapper" onclick="document.getElementById('photo-input').click()">
+      <div class="photo-placeholder" id="photoPlaceholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span>Click to add<br>your photo</span>
+      </div>
+      <img id="profileImg" src="" alt="Sandeep Bandela" style="display:none;" />
+    </div>
+    <label class="photo-upload-label" for="photo-input" title="Upload photo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </label>
+    <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)" />
+    <div class="rhcsa-badge">RHCSA<br>Certified</div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="reveal">
+    <p class="section-label">// Work History</p>
+    <h2 class="section-title">Experience</h2>
+  </div>
+  <div class="timeline">
+
+    <div class="job-card reveal" style="transition-delay:0.1s">
+      <div class="current-dot"></div>
+      <div class="job-header">
+        <span class="job-title">Infrastructure Engineer</span>
+        <span class="job-period">Apr 2025 – Present</span>
+      </div>
+      <div class="job-company">Epiq</div>
+      <div class="job-location">📍 Hyderabad, Telangana, India</div>
+      <ul class="job-bullets">
+        <li>Delivering resilient, high-availability infrastructure solutions across global environments.</li>
+        <li>Maintaining and optimizing enterprise Linux systems and VMware environments.</li>
+        <li>Contributing to seamless support across production, development, and test platforms.</li>
+        <li>Applying expertise in Ansible, AWX, Git, Docker, and Kubernetes to automate and modernize infrastructure operations.</li>
+      </ul>
+    </div>
+
+    <div class="job-card reveal" style="transition-delay:0.15s">
+      <div class="job-header">
+        <span class="job-title">Linux System Administrator</span>
+        <span class="job-period">May 2023 – Apr 2025</span>
+      </div>
+      <div class="job-company">Myzas Technologies Pvt Ltd <span style="color:var(--muted)">· Client: Subex (Telecom AI)</span></div>
+      <div class="job-location">📍 Bengaluru, Karnataka, India · <a href="http://www.mtx-eng.com" target="_blank" style="color:var(--accent2); font-size:0.78rem;">mtx-eng.com</a></div>
+      <p class="job-desc">Subex is a telecom AI solutions company enabling Communications Service Providers (CSP) across the globe to create connected experiences for their customers.</p>
+      <ul class="job-bullets">
+        <li>Configured and managed physical servers and virtualized environments using VMware and oVirt, ensuring high availability and optimized resource utilization.</li>
+        <li>Installed, configured, and maintained Linux OSes including RHEL, CentOS, Ubuntu, and AlmaLinux, ensuring stability and security.</li>
+        <li>Automated routine tasks using Bash scripting for backups, log rotation, and system monitoring.</li>
+        <li>Deployed and managed critical services: DNS, DHCP, NFS, NIS, Samba, Apache/HTTP, NTP, and VNC.</li>
+        <li>Administered user accounts, groups, and permissions with centralized authentication via Active Directory (CentrifyAD), LDAP, and NIS.</li>
+        <li>Performed patch management and system updates to ensure security compliance and minimize vulnerabilities.</li>
+        <li>Monitored system performance using Webmin, CheckMK, SolarWinds, and Nagios — proactively resolving issues.</li>
+        <li>Configured LVM and SWAP partitions to optimize disk space utilization and improve performance.</li>
+        <li>Installed and configured development tools: Python, RStudio, and MySQL for data analysis and application development.</li>
+        <li>Conducted regular health checks, backups, and disaster recovery testing to ensure data integrity and business continuity.</li>
+        <li>Managed file and print sharing with Samba for interoperability between Linux and Windows systems.</li>
+        <li>Built and released physical production servers; implemented kernel patches in production environments.</li>
+      </ul>
+    </div>
+
+    <div class="job-card reveal" style="transition-delay:0.2s">
+      <div class="job-header">
+        <span class="job-title">Senior IT Support Analyst</span>
+        <span class="job-period">Dec 2022 – May 2023</span>
+      </div>
+      <div class="job-company">Avenue Supermarts Ltd (DMart)</div>
+      <div class="job-location">📍 Hyderabad, Telangana, India</div>
+      <p class="job-desc">Avenue Supermarts Limited (DMart) is an Indian retail company that owns and operates a chain of supermarkets and hypermarkets.</p>
+      <ul class="job-bullets">
+        <li>Monitored and maintained all IT systems including POS, inventory management, and security systems.</li>
+        <li>Managed and maintained the store's network infrastructure: routers, switches, and Wi-Fi access points.</li>
+        <li>Installed, configured, and updated POS software ensuring optimal performance and security.</li>
+        <li>Customized POS settings for store-specific requirements: tax rates, product catalogs, and payment options.</li>
+        <li>Diagnosed and resolved network issues including slow performance, connectivity problems, and Wi-Fi outages.</li>
+        <li>Maintained network connectivity between POS terminals, servers, and other devices.</li>
+      </ul>
+    </div>
+
+    <div class="job-card reveal" style="transition-delay:0.25s">
+      <div class="job-header">
+        <span class="job-title">IT Support Consultant</span>
+        <span class="job-period">Jun 2017 – Dec 2022</span>
+      </div>
+      <div class="job-company">Electronics Mart India Limited (Bajaj Electronics)</div>
+      <div class="job-location">📍 Hyderabad, Telangana, India</div>
+      <p class="job-desc">Electronics Mart India Limited (EMIL) is a consumer electronics and durable products retailer in India.</p>
+      <ul class="job-bullets">
+        <li>Provided technical support to store employees including cashiers, managers, and other staff.</li>
+        <li>Managed and resolved IT incidents minimizing downtime and disruption to business operations.</li>
+        <li>Integrated redemption voucher systems with POS and billing systems.</li>
+        <li>Trained employees on IT systems and stayed updated on latest technology trends.</li>
+        <li>Logged and tracked IT incidents: hardware failures, software errors, and network outages.</li>
+        <li>Responded to help desk tickets and resolved issues promptly.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="reveal">
+    <p class="section-label">// Technical Stack</p>
+    <h2 class="section-title">Skills</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Operating Systems</div>
+      <div class="skill-tags">
+        <span class="skill-tag">RHEL 7/8/9</span>
+        <span class="skill-tag">CentOS 7/8/9</span>
+        <span class="skill-tag">Ubuntu</span>
+        <span class="skill-tag">AlmaLinux</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Virtualization</div>
+      <div class="skill-tags">
+        <span class="skill-tag">VMware vSphere</span>
+        <span class="skill-tag">oVirt</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Kubernetes</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Automation & Config</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Ansible</span>
+        <span class="skill-tag">AWX</span>
+        <span class="skill-tag">Bash Scripting</span>
+        <span class="skill-tag">Git</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Network Services</div>
+      <div class="skill-tags">
+        <span class="skill-tag">DNS</span>
+        <span class="skill-tag">DHCP</span>
+        <span class="skill-tag">NFS</span>
+        <span class="skill-tag">NIS</span>
+        <span class="skill-tag">Samba</span>
+        <span class="skill-tag">Apache</span>
+        <span class="skill-tag">NTP</span>
+        <span class="skill-tag">VNC</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Identity & Auth</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Active Directory</span>
+        <span class="skill-tag">CentrifyAD</span>
+        <span class="skill-tag">LDAP</span>
+        <span class="skill-tag">NIS Auth</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Monitoring</div>
+      <div class="skill-tags">
+        <span class="skill-tag">SolarWinds</span>
+        <span class="skill-tag">Nagios</span>
+        <span class="skill-tag">CheckMK</span>
+        <span class="skill-tag">Webmin</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Storage</div>
+      <div class="skill-tags">
+        <span class="skill-tag">LVM</span>
+        <span class="skill-tag">SWAP</span>
+        <span class="skill-tag">Autofs</span>
+        <span class="skill-tag">NFS Mounts</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Package Management</div>
+      <div class="skill-tags">
+        <span class="skill-tag">YUM</span>
+        <span class="skill-tag">RPM</span>
+        <span class="skill-tag">APT</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Dev Tools</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">RStudio</span>
+        <span class="skill-tag">Crontab</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="reveal">
+    <p class="section-label">// Credentials</p>
+    <h2 class="section-title">Certifications</h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card reveal">
+      <div class="cert-icon red-hat">🎯</div>
+      <div>
+        <div class="cert-name">Red Hat Certified System Administrator (RHCSA)</div>
+        <div class="cert-meta">
+          ID: 240-238-444<br>
+          Red Hat Official Certification
+        </div>
+        <a href="https://www.credly.com/go/GNjKvs7dJgf48gBIJJ8iog" target="_blank" class="cert-link">Verify on Credly →</a>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon linux">🐧</div>
+      <div>
+        <div class="cert-name">Linux Training Course</div>
+        <div class="cert-meta">
+          Certificate No: UC-45021414-8156-4448-b516-ce2051fca258<br>
+          Udemy
+        </div>
+        <a href="https://ude.my/UC-45021414-8156-4448-b516-ce2051fca258" target="_blank" class="cert-link">View Certificate →</a>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon other">📚</div>
+      <div>
+        <div class="cert-name">Ansible for Automation Essential Training</div>
+        <div class="cert-meta">Advanced Playbooks, Roles, and Diverse Hosts<br>LinkedIn Learning</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon other">☸️</div>
+      <div>
+        <div class="cert-name">Learning Kubernetes</div>
+        <div class="cert-meta">LinkedIn Learning</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon other">🎫</div>
+      <div>
+        <div class="cert-name">Learning Jira (Cloud Edition)</div>
+        <div class="cert-meta">LinkedIn Learning</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon other">⚙️</div>
+      <div>
+        <div class="cert-name">Learning ServiceNow</div>
+        <div class="cert-meta">LinkedIn Learning</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="reveal">
+    <p class="section-label">// Academic Background</p>
+    <h2 class="section-title">Education</h2>
+  </div>
+  <div class="edu-card reveal">
+    <div class="edu-icon">🎓</div>
+    <div>
+      <div class="edu-degree">Bachelor of Technology (B.Tech) – Computer Science & Engineering</div>
+      <div class="edu-uni">Monad University</div>
+      <div class="edu-year">June 2013 – June 2017</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="reveal">
+    <p class="section-label">// Key Milestones</p>
+    <h2 class="section-title">Achievements</h2>
+  </div>
+  <div class="achievements-grid">
+    <div class="achievement-card reveal">
+      <p><strong style="color:var(--white)">Promoted to L1 System Administrator</strong><br><br>Recognized for outstanding performance and promoted within the infrastructure team.</p>
+    </div>
+    <div class="achievement-card reveal">
+      <p><strong style="color:var(--white)">NOC → Unix Administration Transition</strong><br><br>Successfully transitioned from NOC Engineer to Unix Administration team through consistent performance and self-driven upskilling.</p>
+    </div>
+    <div class="achievement-card reveal">
+      <p><strong style="color:var(--white)">7+ Years in IT Infrastructure</strong><br><br>Progressive career growth from IT support to Infrastructure Engineer across diverse enterprise environments.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- LANGUAGES -->
+<section id="languages">
+  <div class="reveal">
+    <p class="section-label">// Communication</p>
+    <h2 class="section-title">Languages</h2>
+  </div>
+  <div class="lang-grid">
+    <div class="lang-chip reveal">
+      <div class="lang-name">Telugu</div>
+      <div class="lang-level">Native / Bilingual</div>
+    </div>
+    <div class="lang-chip reveal">
+      <div class="lang-name">English</div>
+      <div class="lang-level">Professional Working</div>
+    </div>
+    <div class="lang-chip reveal">
+      <div class="lang-name">Hindi</div>
+      <div class="lang-level">Professional Working</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">// Get In Touch</p>
+    <h2 class="section-title">Contact</h2>
+  </div>
+  <div class="contact-grid">
+    <a href="mailto:sandeepreddy40343@gmail.com" class="contact-item reveal">
+      <div class="contact-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">sandeepreddy40343@gmail.com</div>
+      </div>
+    </a>
+    <a href="tel:+917396089694" class="contact-item reveal">
+      <div class="contact-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 13.18 19.79 19.79 0 0 1 1 4.59a2 2 0 0 1 1.995-2H6a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 10a16 16 0 0 0 6.29 6.29l1.28-1.28a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">+91 7396089694</div>
+      </div>
+    </a>
+    <a href="https://www.linkedin.com/in/sandeep-reddy-bandela" target="_blank" class="contact-item reveal">
+      <div class="contact-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#60A5FA">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">sandeep-reddy-bandela</div>
+      </div>
+    </a>
+    <a href="https://github.com/Linux-Ansible-Bash-Automation" target="_blank" class="contact-item reveal">
+      <div class="contact-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#60A5FA">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">Linux-Ansible-Bash-Automation</div>
+      </div>
+    </a>
+    <div class="contact-item reveal" style="cursor:default;">
+      <div class="contact-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">Location</div>
+        <div class="contact-value">Hyderabad, Telangana, India</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Sandeep Bandela · Built with HTML/CSS · Deployed on GitHub Pages</p>
+</footer>
+
+<script>
+  // Photo upload
+  function handlePhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.getElementById('profileImg');
+      const placeholder = document.getElementById('photoPlaceholder');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+      localStorage.setItem('profilePhoto', e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Restore saved photo
+  const saved = localStorage.getItem('profilePhoto');
+  if (saved) {
+    const img = document.getElementById('profileImg');
+    const placeholder = document.getElementById('photoPlaceholder');
+    img.src = saved;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
