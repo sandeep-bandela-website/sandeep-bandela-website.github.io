@@ -135,17 +135,20 @@
       position: relative;
     }
     .photo-wrapper {
-      width: 240px; height: 240px;
+      width: 260px; height: 260px;
       border-radius: 50%;
       border: 3px solid var(--accent);
       overflow: hidden;
       position: relative;
-      cursor: pointer;
+      box-shadow: 0 0 0 6px rgba(59,130,246,0.12), 0 8px 40px rgba(0,0,0,0.5);
     }
     .photo-wrapper img {
       width: 100%; height: 100%;
       object-fit: cover;
+      object-position: center top;
       display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
     .photo-placeholder {
       width: 100%; height: 100%;
@@ -158,16 +161,25 @@
       gap: 0.5rem;
     }
     .photo-placeholder svg { opacity: 0.4; }
-    .photo-upload-label {
-      position: absolute; bottom: 8px; right: 8px;
-      background: var(--accent);
-      border-radius: 50%; width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    .photo-instructions {
+      margin-top: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 260px;
+      text-align: center;
     }
-    .photo-upload-label:hover { background: var(--accent2); }
-    .photo-upload-label svg { pointer-events: none; }
+    .photo-instructions code {
+      color: var(--accent2);
+      background: var(--bg);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
     #photo-input { display: none; }
     .rhcsa-badge {
       position: absolute; top: -10px; right: -10px;
@@ -425,21 +437,22 @@
   </div>
 
   <div class="hero-photo">
-    <div class="photo-wrapper" id="photoWrapper" onclick="document.getElementById('photo-input').click()">
+    <div class="photo-wrapper" id="photoWrapper">
       <div class="photo-placeholder" id="photoPlaceholder">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
         </svg>
-        <span>Click to add<br>your photo</span>
+        <span style="font-size:0.72rem; padding: 0 1rem;">Upload <code style="color:var(--accent2)">photo.jpg</code><br>to your GitHub repo</span>
       </div>
-      <img id="profileImg" src="" alt="Sandeep Bandela" style="display:none;" />
+      <!-- To show your photo: upload a file named photo.jpg to your GitHub repo root -->
+      <img id="profileImg" src="photo.jpg" alt="Sandeep Bandela"
+           onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';"
+           onload="this.style.display='block'; document.getElementById('photoPlaceholder').style.display='none';" />
     </div>
-    <label class="photo-upload-label" for="photo-input" title="Upload photo">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-      </svg>
-    </label>
-    <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)" />
+    <div class="photo-instructions">
+      📸 To add your photo:<br>
+      upload as <code>photo.jpg</code><br>to your GitHub repo root
+    </div>
     <div class="rhcsa-badge">RHCSA<br>Certified</div>
   </div>
 </section>
@@ -826,32 +839,6 @@
 </footer>
 
 <script>
-  // Photo upload
-  function handlePhoto(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = document.getElementById('profileImg');
-      const placeholder = document.getElementById('photoPlaceholder');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      placeholder.style.display = 'none';
-      localStorage.setItem('profilePhoto', e.target.result);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Restore saved photo
-  const saved = localStorage.getItem('profilePhoto');
-  if (saved) {
-    const img = document.getElementById('profileImg');
-    const placeholder = document.getElementById('photoPlaceholder');
-    img.src = saved;
-    img.style.display = 'block';
-    placeholder.style.display = 'none';
-  }
-
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
