@@ -140,18 +140,18 @@
       border: 3px solid var(--accent);
       overflow: hidden;
       position: relative;
+      background: var(--surface);
       box-shadow: 0 0 0 6px rgba(59,130,246,0.12), 0 8px 40px rgba(0,0,0,0.5);
     }
     .photo-wrapper img {
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: center top;
+      object-position: center 22%;
       display: block;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
     }
     .photo-placeholder {
-      width: 100%; height: 100%;
+      position: absolute; inset: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       background: var(--surface);
@@ -362,14 +362,79 @@
       font-size: 0.78rem;
     }
 
+    /* ── FLOATING MENU (MOBILE) ── */
+    .fab {
+      display: none;
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      z-index: 200;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.45);
+      cursor: pointer;
+      transition: transform 0.25s ease, background 0.2s;
+    }
+    .fab:active { transform: scale(0.92); }
+    .fab.open { transform: rotate(90deg); background: var(--accent2); }
+    .fab svg { pointer-events: none; }
+
+    .fab-menu {
+      display: none;
+      position: fixed; bottom: 5.5rem; right: 1.5rem;
+      z-index: 200;
+      flex-direction: column;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.7rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      opacity: 0; transform: translateY(12px) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      min-width: 190px;
+    }
+    .fab-menu.open { opacity: 1; transform: none; pointer-events: auto; }
+    .fab-menu a {
+      display: flex; align-items: center; gap: 0.7rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      padding: 0.65rem 0.85rem;
+      border-radius: 9px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .fab-menu a:active, .fab-menu a:hover {
+      background: var(--bg);
+      color: var(--accent2);
+    }
+    .fab-menu a span.ic { font-size: 1rem; width: 20px; text-align: center; }
+
+    .fab-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 150;
+      background: rgba(11,15,26,0.6);
+      backdrop-filter: blur(3px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    .fab-backdrop.open { opacity: 1; pointer-events: auto; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       #hero { flex-direction: column-reverse; align-items: center; text-align: center; }
       .hero-cta { justify-content: center; }
       .hero-badges { justify-content: center; }
-      nav { padding: 0.8rem 1rem; }
-      .nav-links { gap: 1rem; }
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links { display: none; }
       .job-header { flex-direction: column; }
+      .photo-wrapper { width: 200px; height: 200px; }
+
+      .fab { display: flex; }
+      .fab-menu { display: flex; }
+      .fab-backdrop { display: block; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -394,6 +459,28 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
+
+<!-- FLOATING MOBILE MENU -->
+<div class="fab-backdrop" id="fabBackdrop" onclick="toggleFab()"></div>
+
+<div class="fab-menu" id="fabMenu">
+  <a href="#hero"           onclick="toggleFab()"><span class="ic">🏠</span> Home</a>
+  <a href="#experience"     onclick="toggleFab()"><span class="ic">💼</span> Experience</a>
+  <a href="#skills"         onclick="toggleFab()"><span class="ic">⚡</span> Skills</a>
+  <a href="#certifications" onclick="toggleFab()"><span class="ic">🎯</span> Certifications</a>
+  <a href="#education"      onclick="toggleFab()"><span class="ic">🎓</span> Education</a>
+  <a href="#achievements"   onclick="toggleFab()"><span class="ic">🏆</span> Achievements</a>
+  <a href="#languages"      onclick="toggleFab()"><span class="ic">🌐</span> Languages</a>
+  <a href="#contact"        onclick="toggleFab()"><span class="ic">✉️</span> Contact</a>
+</div>
+
+<button class="fab" id="fabBtn" onclick="toggleFab()" aria-label="Open navigation menu">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+    <line x1="4" y1="7"  x2="20" y2="7"/>
+    <line x1="4" y1="12" x2="20" y2="12"/>
+    <line x1="4" y1="17" x2="20" y2="17"/>
+  </svg>
+</button>
 
 <!-- HERO -->
 <section id="hero">
@@ -538,10 +625,9 @@
       <div class="skill-group-title">Operating Systems</div>
       <div class="skill-tags">
         <span class="skill-tag">RHEL 7/8/9</span>
-        <span class="skill-tag">Ubuntu</span>
         <span class="skill-tag">CentOS 7/8/9</span>
+        <span class="skill-tag">Ubuntu</span>
         <span class="skill-tag">AlmaLinux</span>
-        <span class="skill-tag">Oracle</span>
       </div>
     </div>
     <div class="skill-group reveal">
@@ -605,7 +691,7 @@
     <div class="skill-group reveal">
       <div class="skill-group-title">Package Management</div>
       <div class="skill-tags">
-        <span class="skill-tag">YUM/DNF</span>
+        <span class="skill-tag">YUM</span>
         <span class="skill-tag">RPM</span>
         <span class="skill-tag">APT</span>
       </div>
@@ -819,6 +905,13 @@
 </footer>
 
 <script>
+  // Floating mobile menu
+  function toggleFab() {
+    document.getElementById('fabBtn').classList.toggle('open');
+    document.getElementById('fabMenu').classList.toggle('open');
+    document.getElementById('fabBackdrop').classList.toggle('open');
+  }
+
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
