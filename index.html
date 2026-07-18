@@ -138,30 +138,32 @@
       width: 260px; height: 260px;
       border-radius: 50%;
       border: 3px solid var(--accent);
-      overflow: hidden;
       position: relative;
-      background: var(--surface);
+      overflow: hidden;
+      isolation: isolate;
+      background-color: var(--surface);
       box-shadow: 0 0 0 6px rgba(59,130,246,0.12), 0 8px 40px rgba(0,0,0,0.5);
     }
-    .photo-wrapper img {
+
+    /* The photo itself — painted as a background, no transforms involved.
+       This avoids the Chrome/Edge bug where transformed children escape
+       a border-radius clip on desktop. */
+    .photo-img {
       position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      display: block;
+      border-radius: 50%;
 
       /* ─── ADJUST YOUR PHOTO HERE ───────────────────────
-         --zoom  : 1 = no zoom, 1.4 = zoomed in 40%
-         --shiftX: negative = move LEFT,  positive = move RIGHT
-         --shiftY: negative = move UP,    positive = move DOWN
+         background-size    : 100% = fit, 145% = zoomed in 45%
+         background-position: first value  = horizontal (0% left  → 100% right)
+                              second value = vertical   (0% top   → 100% bottom)
+         The image URL itself is resolved automatically by the
+         script at the bottom of this file — no need to edit it.
       ──────────────────────────────────────────────────── */
-      --zoom:   1.45;
-      --shiftX: -8%;
-      --shiftY:  4%;
-
-      transform: scale(var(--zoom)) translate(var(--shiftX), var(--shiftY));
-      transform-origin: center center;
+      background-size: 145%;
+      background-position: 58% 18%;
+      background-repeat: no-repeat;
     }
+
     .photo-placeholder {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
@@ -171,6 +173,7 @@
       font-size: 0.8rem;
       text-align: center;
       gap: 0.5rem;
+      border-radius: 50%;
     }
     .photo-placeholder svg { opacity: 0.4; }
 
@@ -528,9 +531,7 @@
         <span style="font-size:0.72rem; padding: 0 1rem;">Upload <code style="color:var(--accent2)">photo.jpg</code><br>to your GitHub repo</span>
       </div>
       <!-- To show your photo: upload a file named photo.jpg to your GitHub repo root -->
-      <img id="profileImg" src="photo.jpg" alt="Sandeep Bandela"
-           onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';"
-           onload="this.style.display='block'; document.getElementById('photoPlaceholder').style.display='none';" />
+      <div class="photo-img" id="photoImg" style="display:none;"></div>
     </div>
 
     <div class="rhcsa-badge">RHCSA<br>Certified</div>
@@ -919,6 +920,57 @@
 </footer>
 
 <script>
+  /* ─────────────────────────────────────────────────────────────
+     PROFILE PHOTO RESOLVER
+     GitHub Pages runs on Linux, which treats filenames as
+     case-sensitive: photo.jpg and photo.JPG are different files.
+     Rather than force one spelling, this tries each candidate in
+     order and uses the first that loads successfully.
+     Add or reorder entries below if you use a different name.
+     ───────────────────────────────────────────────────────────── */
+  (function resolveProfilePhoto() {
+    const candidates = [
+      'photo.jpg',  'photo.JPG',
+      'photo.jpeg', 'photo.JPEG',
+      'photo.png',  'photo.PNG',
+      'photo.webp', 'photo.WEBP'
+    ];
+
+    const target      = document.getElementById('photoImg');
+    const placeholder = document.getElementById('photoPlaceholder');
+
+    function tryNext(index) {
+      // Every candidate failed — leave the placeholder visible.
+      if (index >= candidates.length) {
+        target.style.display = 'none';
+        placeholder.style.display = 'flex';
+        console.warn(
+          'No profile photo found. Upload one of these to your repo root: '
+          + candidates.join(', ')
+        );
+        return;
+      }
+
+      const file  = candidates[index];
+      const probe = new Image();
+
+      probe.onload = function () {
+        // Guard against servers that return a 0-byte or broken image.
+        if (!probe.naturalWidth) { tryNext(index + 1); return; }
+
+        target.style.backgroundImage = "url('" + file + "')";
+        target.style.display = 'block';
+        placeholder.style.display = 'none';
+      };
+
+      probe.onerror = function () { tryNext(index + 1); };
+
+      probe.src = file;
+    }
+
+    tryNext(0);
+  })();
+
   // Floating mobile menu
   function toggleFab() {
     document.getElementById('fabBtn').classList.toggle('open');
